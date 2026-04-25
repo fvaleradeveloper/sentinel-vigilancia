@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vigilancia_test.html - Sentinel-SaaS</title>
+    <style>
+        /* Reset y base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hero Section con gradiente profesional (tonos de seguridad) */
+        .hero {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 30%, #0f2027 70%, #203a43 100%);
+            padding: 2rem 1.5rem 3rem;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efecto de patrón sutil de fondo */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px, 60px 60px;
+            background-position: 0 0, 30px 30px;
+            pointer-events: none;
+        }
+
+        /* Pregunta principal destacada */
+        .hero-question {
+            font-size: clamp(1.6rem, 4.5vw, 2.8rem);
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            animation: fadeInDown 0.8s ease-out;
+            max-width: 850px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-question .highlight {
+            display: block;
+            font-size: clamp(1.3rem, 5.5vw, 2.0rem);
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+            margin-top: 0.8rem;
+            animation: pulse 2.5s infinite;
+            font-weight: 800;
+        }
+
+        .hero-question .agent-name {
+            color: #ff6b6b;
+            font-weight: 900;
+        }
+
+        /* Subtítulo de apoyo */
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.92);
+            margin: 1.2rem 0 2.5rem;
+            max-width: 700px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Logo de Sentinel-SaaS - SVG Inline */
+        .logo-container {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 8px rgba(0, 210, 255, 0.3));
+        }
+
+        /* Botón de demo */
+        .demo-button {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            border: none;
+            padding: 1rem 2.8rem;
+            font-size: clamp(1rem, 4vw, 1.35rem);
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.35);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 210, 255, 0.55);
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+        }
+
+        .demo-button:active {
+            transform: translateY(-1px);
+        }
+
+        .demo-button:focus {
+            outline: 3px solid rgba(255, 255, 255, 0.85);
+            outline-offset: 3px;
+        }
+
+        /* Footer cintillo oscuro */
+        .footer {
+            background: #0a0e17;
+            color: #c5c5d2;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            border-top: 3px solid #00d2ff;
+            position: relative;
+            z-index: 3;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem 1.5rem;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .footer a {
+            color: #00d2ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: #ffd700;
+            text-decoration: underline;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); text-shadow: 3px 3px 6px rgba(0,0,0,0.6); }
+            50% { transform: scale(1.02); text-shadow: 4px 4px 8px rgba(0,0,0,0.8); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Responsive adicional */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 1.5rem 1rem 2.5rem;
+                min-height: 65vh;
+            }
+            .hero-question { margin-bottom: 0.8rem; }
+            .logo-container {
+                width: 2.8rem;
+                height: 2.8rem;
+            }
+            .demo-button {
+                width: 100%;
+                max-width: 340px;
+                justify-content: center;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+        }
+
+        /* Accesibilidad: modo alto contraste */
+        @media (prefers-contrast: high) {
+            .hero-question { text-shadow: 3px 3px 0 #000; }
+            .hero-question .highlight { text-shadow: 4px 4px 0 #000; }
+            .demo-button { border: 3px solid #fff; }
+        }
+
+        /* Reducción de movimiento */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sección Hero con pregunta para dueños de empresas de vigilancia -->
+    <section class="hero">
+        <!-- Logo de Sentinel-SaaS - SVG Inline (sin archivo externo) -->
+        <div class="logo-container" aria-label="Sentinel-SaaS Logo">
+            <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle logoDesc">
+                <title id="logoTitle">Sentinel-SaaS Logo</title>
+                <desc id="logoDesc">Escudo de seguridad con ojo vigilante en color cyan</desc>
+                
+                <!-- Gradientes -->
+                <defs>
+                    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1a2a3a;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#2d4a5a;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#1a2a3a;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="eyeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#00d2ff;stop-opacity:1" />
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                
+                <!-- Escudo -->
+                <path d="M50 5 L90 25 L90 65 Q90 95 50 115 Q10 95 10 65 L10 25 Z" 
+                      fill="url(#shieldGradient)" 
+                      stroke="url(#eyeGradient)" 
+                      stroke-width="3"
+                      filter="url(#glow)"/>
+                
+                <!-- Ojo vigilante -->
+                <g filter="url(#glow)">
+                    <!-- Forma del ojo -->
+                    <path d="M25 65 Q50 50 75 65 Q50 80 25 65" 
+                          fill="none" 
+                          stroke="url(#eyeGradient)" 
+                          stroke-width="4"
+                          stroke-linecap="round"/>
+                    <!-- Iris/Pupila -->
+                    <circle cx="50" cy="65" r="12" 
+                            fill="none" 
+                            stroke="url(#eyeGradient)" 
+                            stroke-width="3"/>
+                    <circle cx="50" cy="65" r="5" 
+                            fill="#00ffff"/>
+                    <!-- Párpado superior -->
+                    <path d="M30 58 Q50 45 70 58" 
+                          fill="none" 
+                          stroke="url(#eyeGradient)" 
+                          stroke-width="2.5"
+                          stroke-linecap="round"/>
+                </g>
+                
+                <!-- Líneas decorativas del escudo -->
+                <path d="M15 30 L50 15 L85 30" 
+                      fill="none" 
+                      stroke="rgba(0, 210, 255, 0.4)" 
+                      stroke-width="1.5"
+                      stroke-linecap="round"/>
+            </svg>
+        </div>
+        
+        <h1 class="hero-question">
+            ¿Sabe qué hace el Agente <span class="agent-name">Vicente</span> ahora mismo?
+            <span class="highlight">La imagen de su empresa es lo que ve en sus Agentes</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+            Controle en tiempo real, genere reportes automáticos y eleve el estándar de su servicio de vigilancia con Sentinel-SaaS.
+        </p>
+        
+        <button class="demo-button" id="btnDemo" aria-label="Solicitar demostración de Sentinel-SaaS Vigilancia por WhatsApp">
+            Lo invito a una demo
+        </button>
+    </section>
+
+    <!-- Footer con información legal -->
+    <footer class="footer">
+        <div class="footer-content">
+            <span class="footer-item">© 2026 Sentinel-SaaS</span>
+            <span class="footer-item">️ <a href="mailto:fvalera.developer@gmail.com">fvalera.developer@gmail.com</a></span>
+            <span class="footer-item">🔒 Plataforma de gestión para vigilancia</span>
+        </div>
+    </footer>
+
+    <!-- JavaScript embebido -->
+    <script>
+        // Configuración de WhatsApp
+        const WHATSAPP_NUMBER = '51912384148';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnDemo = document.getElementById('btnDemo');
+            
+            btnDemo.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const originalText = this.innerHTML;
+                this.innerHTML = '🔄 Conectando...';
+                this.disabled = true;
+                
+                const promptMessage = 'Hola, vi su webapp de vigilancia. Lo invito a una demo. Mi empresa es: ';
+                const encodedMessage = encodeURIComponent(promptMessage);
+                const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+                
+                console.log('🛡️ Vigilance Demo Request - Sentinel-SaaS - Timestamp:', new Date().toISOString());
+                
+                setTimeout(() => {
+                    const newWindow = window.open(whatsappURL, '_blank', 'noopener,noreferrer');
+                    
+                    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                        window.location.href = whatsappURL;
+                    }
+                    
+                    setTimeout(() => {
+                        btnDemo.innerHTML = originalText;
+                        btnDemo.disabled = false;
+                    }, 3500);
+                }, 350);
+            });
+            
+            btnDemo.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+            
+            btnDemo.addEventListener('click', function(e) {
+                createRipple(e);
+            });
+            
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const ripple = document.createElement('span');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.classList.add('ripple');
+                
+                if (!document.getElementById('ripple-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'ripple-styles';
+                    style.textContent = `
+                        .demo-button { position: relative; overflow: hidden; }
+                        .ripple {
+                            position: absolute;
+                            border-radius: 50%;
+                            background: rgba(255, 255, 255, 0.5);
+                            transform: scale(0);
+                            animation: ripple-animation 0.6s linear;
+                            pointer-events: none;
+                        }
+                        @keyframes ripple-animation {
+                            to { transform: scale(4); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                button.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+            
+            const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -30px 0px' };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.hero-question, .hero-subtitle, .demo-button, .logo-container').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(15px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+        });
+        
+        (function() {
+            const metaDesc = document.createElement('meta');
+            metaDesc.name = 'description';
+            metaDesc.content = 'Sentinel-SaaS Vigilancia: Controle a sus agentes en tiempo real. ¿Sabe qué hace el Agente Vicente? Solicite su demo por WhatsApp.';
+            document.head.appendChild(metaDesc);
+            
+            const metaTheme = document.createElement('meta');
+            metaTheme.name = 'theme-color';
+            metaTheme.content = '#1e3c72';
+            document.head.appendChild(metaTheme);
+            
+            const ogTitle = document.createElement('meta');
+            ogTitle.property = 'og:title';
+            ogTitle.content = 'Sentinel-SaaS Vigilancia - Control Total de sus Agentes';
+            document.head.appendChild(ogTitle);
+            
+            const ogDesc = document.createElement('meta');
+            ogDesc.property = 'og:description';
+            ogDesc.content = 'La imagen de su empresa es lo que ve en sus Agentes. Gestione vigilancia con tecnología SaaS.';
+            document.head.appendChild(ogDesc);
+        })();
+    </script>
+</body>
+</html>
